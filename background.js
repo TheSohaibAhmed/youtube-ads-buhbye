@@ -14,7 +14,11 @@ chrome.action.onClicked.addListener(async (tab) => {
   chrome.tabs.sendMessage(tab.id, { state: nextState });
 });
 chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
-  const prevState = await chrome.action.getBadgeText({ tabId: tab.id });
-  // Next state will always be the opposite
-  chrome.tabs.sendMessage(tabId, { state: prevState || "ON" });
+  try {
+    const prevState = await chrome.action.getBadgeText({ tabId: tab.id });
+    // Next state will always be the opposite
+    chrome.tabs.sendMessage(tabId, { state: prevState || "ON" });
+  } catch (e) {
+    console.error(e);
+  }
 });
